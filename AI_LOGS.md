@@ -545,3 +545,132 @@ Before deploying to a real multi-attendant facility:
 7. Add automated concurrency and API integration tests.
 8. Rotate the seeded attendant password immediately.
 9. Add `sortBy=fee` support if external clients require fee sorting; the current ticket route supports `entryTime` sorting.
+
+## 13. README and Documentation Pass
+
+### User request
+
+Generate a production-grade `README.md` following the Round 2 Builder guidelines. The requested documentation needed to cover:
+
+- OmniPark's product identity and parking-operations pitch.
+- Local and GitHub Codespaces setup.
+- Prisma, SQLite, seed, and development commands.
+- Every REST endpoint with methods, paths, query parameters, request bodies, response bodies, and status codes.
+- Fee formulas and daily-cap behavior.
+- SQLite lock troubleshooting, Prisma singleton behavior, CLI fixes, and database reset.
+
+### Documentation decisions
+
+The README was written against the actual repository rather than an idealized API contract. It explicitly documented:
+
+- The root Prisma workspace and nested `parking-app` Next.js application.
+- `/api/clock` as the served path rather than `/clock`.
+- `plate` and `search` support for ticket lookup.
+- The current ticket route's supported `entryTime` sorting.
+- Authentication's current limitation: credentials are validated, but a signed cookie or bearer token is not yet issued.
+- Operational routes for force-close, reassignment, settings, maintenance, and capacity changes.
+- SQLite WAL guidance and its limitation as a single-writer database.
+
+The README was checked with:
+
+```bash
+git diff --check -- README.md
+```
+
+## 14. Conversation Log Documentation
+
+### User request
+
+The user asked for the entire conversation history to be placed in `AI_LOGS.md`.
+
+### Result
+
+`AI_LOGS.md` was populated with a chronological engineering record covering:
+
+- Initial Prisma and seed implementation.
+- Fee-engine design and corrections.
+- Security review and bcrypt migration.
+- REST API construction.
+- OmniPark frontend construction.
+- Dynamic garage/floor/maintenance functionality.
+- Rate import, clock, transfer, force-close, and reassignment workflows.
+- Authentication and ticket search.
+- Runtime debugging and validation history.
+
+The workspace debug artifact was inspected. It contains JSONL session telemetry rather than a complete human-readable transcript, so the file is a faithful reconstruction of substantive conversation history, not a verbatim export of every chat message and tool event.
+
+Validation:
+
+```bash
+git diff --check -- AI_LOGS.md
+wc -l AI_LOGS.md
+```
+
+The log contained 547 lines after the initial history was written and was then extended with this documentation and GitHub publication record.
+
+## 15. Final GitHub Publication
+
+### User request
+
+Commit the complete project and push it to GitHub.
+
+### Pre-commit inspection
+
+The repository was checked with:
+
+```bash
+git status --short --untracked-files=all
+git branch --show-current
+git remote -v
+git log --oneline -5
+```
+
+The active branch was `main`, the remote was `origin`, and the GitHub target was:
+
+```text
+https://github.com/aditya-soni11/Parking-Garage-App
+```
+
+### Commit and push
+
+All workspace files were staged and checked:
+
+```bash
+git add -A
+git diff --cached --check
+git diff --cached --stat
+```
+
+The complete implementation was committed as:
+
+```text
+f956ef5 Build OmniPark parking operations system
+```
+
+It was pushed with:
+
+```bash
+git push origin main
+```
+
+The push succeeded:
+
+```text
+1f301dd..f956ef5  main -> main
+```
+
+The final status confirmed synchronization:
+
+```text
+## main...origin/main
+```
+
+Final commit decoration:
+
+```text
+f956ef5 (HEAD -> main, origin/main, origin/HEAD) Build OmniPark parking operations system
+```
+
+## 16. Current Conversation State
+
+The current request is to preserve the complete history in `AI_LOGS.md`. This file now contains the complete substantive reconstruction from the beginning of the OmniPark build through the final GitHub publication. It intentionally does not claim to be a byte-for-byte transcript because the available workspace session artifact does not contain the rendered chat messages.
