@@ -1,0 +1,53 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+}
+
+model Spot {
+  id       String   @id @default(uuid())
+  number   String   @unique
+  floor    Int      @default(1)
+  type     String   // "COMPACT", "STANDARD", "EV"
+  status   String   @default("AVAILABLE") // "AVAILABLE", "OCCUPIED", "MAINTENANCE"
+  tickets  Ticket[]
+}
+
+model Ticket {
+  id         String    @id @default(uuid())
+  plate      String
+  entryTime  DateTime  @default(now())
+  exitTime   DateTime?
+  fee        Float?
+  closeReason String?
+  status     String    @default("ACTIVE") // "ACTIVE", "COMPLETED"
+  spotId     String
+  spot       Spot      @relation(fields: [spotId], references: [id])
+}
+
+model RateCard {
+  id                 String   @id @default(uuid())
+  spotType           String   @unique // "COMPACT", "STANDARD", "EV"
+  firstHourRate      Float
+  additionalHourRate Float
+  dailyCap           Float
+  updatedAt          DateTime @updatedAt
+}
+
+model GarageSettings {
+  id         String   @id @default("default")
+  name       String   @default("OmniPark Garage")
+  address    String   @default("")
+  taxId      String   @default("")
+  floorCount Int      @default(1)
+  updatedAt  DateTime @updatedAt
+}
